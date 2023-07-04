@@ -28,49 +28,46 @@ public class WalletConnectView: ObservableObject {
     ]
     
     var publishers = [AnyCancellable]()
+    @Published public var account: [Account] = []
     
-    @Published public var address: String?
-    @Published public var uri : WalletConnectURI?
-    @Published var viewController: UIViewController?
-    
-    public init(projectId: String) {
+    public init(projectId: String,
+                name: String,
+                description: String,
+                url: String,
+                icons: [String])
+    {
         Networking.configure(projectId: projectId, socketFactory: DefaultSocketFactory())
-        let metadata = AppMetadata(
-            name: "Swift Dapp",
-            description: "WalletConnect DApp sample",
-            url: "wallet.connect",
-            icons: ["https://avatars.githubusercontent.com/u/37784886"]
+        
+        let metaData = AppMetadata(
+            name: name,
+            description: description,
+            url: url,
+            icons: icons
         )
         
-        WalletConnectModal.configure(projectId: projectId, metadata: metadata)
-        
-        start()
+        WalletConnectModal.configure(projectId: projectId, metadata: metaData)
+        configure(metaData: metaData)
     }
     
-    func start() {
-        let metadata = AppMetadata(
-            name: "Navigate App",
-            description: "WalletConnect to Navigate App",
-            url: "https://nvg8.io",
-            icons: ["https://nvg8.io/assets/Nvg8-Logo.svg"]
-        )
-        
-        Pair.configure(metadata: metadata)
+    func configure(metaData: AppMetadata) {
+        Pair.configure(metadata: metaData)
         
         Sign.instance.sessionDeletePublisher
             .receive(on: DispatchQueue.main)
-            .sink { _ in
+            .sink { response in
+                print("Delete Publisher: ", response)
             }.store(in: &publishers)
         
         Sign.instance.sessionResponsePublisher
             .receive(on: DispatchQueue.main)
             .sink { response in
+                print("Response Publisher: ", response)
             }.store(in: &publishers)
         
         Sign.instance.sessionSettlePublisher
             .receive(on: DispatchQueue.main)
             .sink { session in
-                print("\n\nAddress: ", session.accounts.first?.address ?? "", " \n\n\n")
+                self.account = session.accounts
             }.store(in: &publishers)
     }
     
@@ -97,10 +94,10 @@ public class WalletConnectView: ObservableObject {
                 optionalNamespaces: nil,
                 sessionProperties: nil
             ))
-            uri = try await WalletConnectModal.instance.connect(topic: nil)
+            let uri = try await WalletConnectModal.instance.connect(topic: nil)
             
             DispatchQueue.main.async {
-                if let urlString = self.uri?.deeplinkUri, let url = URL(string: "https://sequence.app/wc?uri=\(urlString)") {
+                if let urlString = uri?.deeplinkUri, let url = URL(string: "https://sequence.app/wc?uri=\(urlString)") {
                     print("URL: ", url)
                     UIApplication.shared.open(url)
                 }
