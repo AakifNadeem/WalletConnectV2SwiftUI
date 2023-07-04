@@ -1,6 +1,7 @@
 # WalletConnectSwiftUIV2
 Plug and Play Library for Wallet Connect V2 SwiftUI
 
+    import WalletConnectV2Swift
 
 Add Packages to your SwiftUI: https://github.com/AakifNadeem/WalletConnectSwiftUIV2
 
