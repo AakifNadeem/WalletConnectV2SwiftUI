@@ -16,8 +16,8 @@ public class WalletConnectView: ObservableObject {
     var namespaces: [String: ProposalNamespace] = [
         "eip155": ProposalNamespace(
             chains: [
-                Blockchain("eip155:80001")!,
-//                Blockchain("eip155:421613")!
+                Blockchain("eip155:137")!,
+                Blockchain("eip155:42161")!
             ],
             methods: [
 //                "eth_sendTransaction",
