@@ -11,24 +11,34 @@ import Combine
 import Foundation
 import WalletConnectModal
 
-
 public class WalletConnectView: ObservableObject {
-    var namespaces: [String: ProposalNamespace] = [
+    let requiredNamespaces: [String: ProposalNamespace] = [
         "eip155": ProposalNamespace(
             chains: [
-                Blockchain("eip155:137")!,
-                Blockchain("eip155:42161")!
+                Blockchain("eip155:137")!,          //Polygon Mainnet
+                Blockchain("eip155:42161")!         //Arbitrum Mainnet
             ],
             methods: [
-//                "eth_sendTransaction",
-                "personal_sign",
-//                "eth_signTypedData"
+                "personal_sign"
             ], events: []
         )
     ]
     
-    var publishers = [AnyCancellable]()
+    let optionalNamespaces: [String: ProposalNamespace] = [
+        "eip155": ProposalNamespace(
+            chains: [
+                Blockchain("eip155:80001")!,        //Polygon Testnet
+                Blockchain("eip155:421613")!        //Arbitrum Testnet
+            ],
+            methods: [
+                "personal_sign"
+            ], events: []
+        )
+    ]
+    
     @Published public var account: [Account] = []
+    @Published public var rejectedReason: String = ""
+    var publishers = [AnyCancellable]()
     
     public init(projectId: String,
                 name: String,
@@ -50,32 +60,26 @@ public class WalletConnectView: ObservableObject {
     }
     
     func configure(metaData: AppMetadata) {
-        Pair.configure(metadata: metaData)
-        
-        Sign.instance.sessionDeletePublisher
-            .receive(on: DispatchQueue.main)
-            .sink { response in
-                print("Delete Publisher: ", response)
-            }.store(in: &publishers)
-        
-        Sign.instance.sessionResponsePublisher
-            .receive(on: DispatchQueue.main)
-            .sink { response in
-                print("Response Publisher: ", response)
-            }.store(in: &publishers)
-        
         Sign.instance.sessionSettlePublisher
             .receive(on: DispatchQueue.main)
             .sink { session in
                 self.account = session.accounts
-            }.store(in: &publishers)
+            }
+            .store(in: &publishers)
+        
+        Sign.instance.sessionRejectionPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { (session, reason) in
+                self.rejectedReason = reason.message
+            })
+            .store(in: &publishers)
     }
     
     public func connectWithWallet() {
         Task {
             WalletConnectModal.set(sessionParams: .init(
-                requiredNamespaces: namespaces,
-                optionalNamespaces: nil,
+                requiredNamespaces: requiredNamespaces,
+                optionalNamespaces: optionalNamespaces,
                 sessionProperties: nil
             ))
             
@@ -90,8 +94,8 @@ public class WalletConnectView: ObservableObject {
     public func connectWithSequence() {
         Task {
             WalletConnectModal.set(sessionParams: .init(
-                requiredNamespaces: namespaces,
-                optionalNamespaces: nil,
+                requiredNamespaces: requiredNamespaces,
+                optionalNamespaces: optionalNamespaces,
                 sessionProperties: nil
             ))
             let uri = try await WalletConnectModal.instance.connect(topic: nil)
