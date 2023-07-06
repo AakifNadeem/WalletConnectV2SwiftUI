@@ -91,7 +91,7 @@ public class WalletConnectView: ObservableObject {
         }
     }
     
-    public func connectWithSequence() {
+    public func connectWithSequence(onCompletion: @escaping (URL) -> Void) {
         Task {
             WalletConnectModal.set(sessionParams: .init(
                 requiredNamespaces: requiredNamespaces,
@@ -103,7 +103,8 @@ public class WalletConnectView: ObservableObject {
             DispatchQueue.main.async {
                 if let urlString = uri?.deeplinkUri, let url = URL(string: "https://sequence.app/wc?uri=\(urlString)") {
                     print("URL: ", url)
-                    UIApplication.shared.open(url)
+                    onCompletion(url)
+//                    UIApplication.shared.open(url)
                 }
             }
         }
