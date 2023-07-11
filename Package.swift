@@ -28,11 +28,14 @@ let package = Package(
                 .product(name: "HDWalletKit", package: "HDWallet"),
                 .product(name: "SolanaSwift", package: "solana-swift"),
                 .product(name: "Web3", package: "Web3.swift"),
+                .product(name: "Web3PromiseKit", package: "Web3.swift"),
+                .product(name: "Web3ContractABI", package: "Web3.swift"),
                 .product(name: "Starscream", package: "Starscream"),
                 .product(name: "WalletConnect", package: "WalletConnectSwiftV2"),
                 .product(name: "WalletConnectAuth", package: "WalletConnectSwiftV2"),
                 .product(name: "WalletConnectModal", package: "WalletConnectSwiftV2"),
                 .product(name: "WalletConnectPush", package: "WalletConnectSwiftV2")
+                
             ],
             path: "Sources"
         )
