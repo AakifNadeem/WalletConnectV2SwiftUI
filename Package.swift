@@ -17,7 +17,7 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/WalletConnect/Web3.swift", exact: "1.0.2"),
         .package(url: "https://github.com/daltoniam/Starscream", exact: "3.1.2"),
-        .package(url: "https://github.com/WalletConnect/WalletConnectSwiftV2.git", branch: "develop"),
+        .package(url: "https://github.com/WalletConnect/WalletConnectSwiftV2.git", exact: "1.6.12"),
         .package(url: "https://github.com/flypaper0/solana-swift", branch: "feature/available-13"),
         .package(url: "https://github.com/WalletConnect/HDWallet", branch: "develop"),
     ],
