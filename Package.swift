@@ -33,8 +33,7 @@ let package = Package(
                 .product(name: "Starscream", package: "Starscream"),
                 .product(name: "WalletConnect", package: "WalletConnectSwiftV2"),
                 .product(name: "WalletConnectAuth", package: "WalletConnectSwiftV2"),
-                .product(name: "WalletConnectModal", package: "WalletConnectSwiftV2"),
-                .product(name: "WalletConnectPush", package: "WalletConnectSwiftV2")
+                .product(name: "WalletConnectModal", package: "WalletConnectSwiftV2")
                 
             ],
             path: "Sources"
