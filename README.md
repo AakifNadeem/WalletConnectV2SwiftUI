@@ -9,11 +9,20 @@ Add Packages to your SwiftUI: https://github.com/AakifNadeem/WalletConnectV2Swif
 Create an Instance:
 
     @State var walletConnect = WalletConnectView(
-                                                projectId: "",
+                                                projectId: "1234123123",
                                                 name: "App",
                                                 description: "WalletConnect to App",
                                                 url: "www.walletconnect.com",
-                                                icons: [""])
+                                                icons: [""],
+                                                supportedChainIds: [
+                                                "eip155": ProposalNamespace(
+                                                    chains: [
+                                                        Blockchain("eip155:137")!
+                                                    ],
+                                                    methods: [
+                                                        "personal_sign"
+                                                    ], events: []
+                                                )])
 Call to get all Wallets Listing:
 
     Button {
