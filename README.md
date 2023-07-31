@@ -31,7 +31,7 @@ Call to get all Wallets Listing:
          Text("Connect To Wallet")
     }
 
-![IMG_34D7DB59C9A9-1](https://github.com/AakifNadeem/WalletConnectV2SwiftUI/assets/58801997/dbb14e5c-f4c4-4db4-b64f-22a50cdd9fef)
+![IMG_34D7DB59C9A9-1](https://github.com/AakifNadeem/WalletConnectV2SwiftUI/assets/58801997/98b43d74-f7a4-4f91-b993-1e7b3d862f45)
 
 
 Additional Call to connect to Sequence Wallet:
