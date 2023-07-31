@@ -8,7 +8,7 @@ Add Packages to your SwiftUI: https://github.com/AakifNadeem/WalletConnectV2Swif
 
 Create an Instance:
 
-    @State var walletConnect = WalletConnectView(
+    @StateObject var walletConnect = WalletConnectView(
                                                 projectId: "1234123123",
                                                 name: "App",
                                                 description: "WalletConnect to App",
@@ -31,6 +31,9 @@ Call to get all Wallets Listing:
          Text("Connect To Wallet")
     }
 
+![IMG_34D7DB59C9A9-1](https://github.com/AakifNadeem/WalletConnectV2SwiftUI/assets/58801997/dbb14e5c-f4c4-4db4-b64f-22a50cdd9fef)
+
+
 Additional Call to connect to Sequence Wallet:
 
     Button {
@@ -44,3 +47,9 @@ Get Your Required Wallet Address:
     .onChange(of: walletConnect.account, perform: { accounts in
             print("Wallet Address: ", accounts.first?.address ?? "")
     })
+
+Get Rejected Reason: 
+    
+    .onChange(of: walletConnect.rejectedReason, perform: { reason in
+            print("Wallet Connection Error", reason)
+        })
