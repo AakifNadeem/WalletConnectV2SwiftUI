@@ -12,18 +12,7 @@ import Foundation
 import WalletConnectModal
 
 public class WalletConnectView: ObservableObject {
-    let requiredNamespaces: [String: ProposalNamespace] = [
-        "eip155": ProposalNamespace(
-            chains: [
-                Blockchain("eip155:137")!,          //Polygon Mainnet
-//                Blockchain("eip155:42161")!         //Arbitrum Mainnet
-            ],
-            methods: [
-                "personal_sign"
-            ], events: []
-        )
-    ]
-    
+    var requiredNamespaces: [String: ProposalNamespace] = [:]
     let optionalNamespaces: [String: ProposalNamespace] = [
         "eip155": ProposalNamespace(
             chains: [
@@ -44,8 +33,10 @@ public class WalletConnectView: ObservableObject {
                 name: String,
                 description: String,
                 url: String,
-                icons: [String])
+                icons: [String],
+                supportedChainIds: [String: ProposalNamespace])
     {
+        self.requiredNamespaces = supportedChainIds
         Networking.configure(projectId: projectId, socketFactory: DefaultSocketFactory())
         
         let metaData = AppMetadata(
