@@ -17,7 +17,8 @@ public class WalletConnectView: ObservableObject {
         "eip155": ProposalNamespace(
             chains: [
                 Blockchain("eip155:80001")!,        //Polygon Testnet
-                Blockchain("eip155:421613")!        //Arbitrum Testnet
+                Blockchain("eip155:421613")!,        //Arbitrum Testnet
+                Blockchain("eip155:84531")!        //Goerli Testnet
             ],
             methods: [
                 "personal_sign"
