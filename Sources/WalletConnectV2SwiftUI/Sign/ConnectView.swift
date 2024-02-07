@@ -50,7 +50,7 @@ public class WalletConnectView: ObservableObject {
             url: url,
             icons: icons,
             redirect: AppMetadata.Redirect(native: redirect, universal: nil)
-        )
+        ) 
         
         WalletConnectModal.configure(
             projectId: projectId,
