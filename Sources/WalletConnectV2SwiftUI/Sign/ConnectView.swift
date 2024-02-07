@@ -10,6 +10,8 @@ import SwiftUI
 import Combine
 import Foundation
 import WalletConnectModal
+import Web3Modal
+import Auth
 
 public class WalletConnectView: ObservableObject {
     var requiredNamespaces: [String: ProposalNamespace] = [:]
@@ -34,23 +36,31 @@ public class WalletConnectView: ObservableObject {
                 description: String,
                 url: String,
                 icons: [String],
+                groupIdentifier: String = "",
+                redirect: String = "",
                 supportedChainIds: [String: ProposalNamespace])
     {
         self.requiredNamespaces = supportedChainIds
-        Networking.configure(projectId: projectId, socketFactory: DefaultSocketFactory())
+        Networking.configure(groupIdentifier: groupIdentifier, projectId: projectId, socketFactory: DefaultSocketFactory())
+        Auth.configure(crypto: DefaultCryptoProvider())
         
         let metaData = AppMetadata(
             name: name,
             description: description,
             url: url,
-            icons: icons
+            icons: icons,
+            redirect: AppMetadata.Redirect(native: redirect, universal: nil)
         )
         
-        WalletConnectModal.configure(projectId: projectId, metadata: metaData)
-        configure(metaData: metaData)
+        WalletConnectModal.configure(
+            projectId: projectId,
+            metadata: metaData
+        )
+        
+        configureSignIn()
     }
     
-    func configure(metaData: AppMetadata) {
+    func configureSignIn() {
         Sign.instance.sessionSettlePublisher
             .receive(on: DispatchQueue.main)
             .sink { session in
@@ -64,6 +74,23 @@ public class WalletConnectView: ObservableObject {
                 self.rejectedReason = reason.message
             })
             .store(in: &publishers)
+        
+        Sign.instance.logsPublisher.sink { log in
+            switch log {
+            case .error(let logMessage):
+                print(logMessage.message)
+            default: return
+            }
+        }.store(in: &publishers)
+
+        Sign.instance.socketConnectionStatusPublisher.sink { status in
+            switch status {
+            case .connected:
+                print("Your web socket has connected")
+            case .disconnected:
+                print("Your web socket is disconnected")
+            }
+        }.store(in: &publishers)
     }
     
     public func connectWithWallet() {
@@ -101,3 +128,24 @@ public class WalletConnectView: ObservableObject {
         }
     }
 }
+
+class WebSocketFactoryMock: WebSocketFactory {
+    func create(with url: URL) -> WebSocketConnecting {
+        WebSocketMock()
+    }
+}
+
+class WebSocketMock: WebSocketConnecting {
+    var request: URLRequest = .init(url: URL(string: "wss://relay.walletconnect.com")!)
+
+    var onText: ((String) -> Void)?
+    var onConnect: (() -> Void)?
+    var onDisconnect: ((Error?) -> Void)?
+    var sendCallCount: Int = 0
+    var isConnected: Bool = false
+
+    func connect() {}
+    func disconnect() {}
+    func write(string: String, completion: (() -> Void)?) {}
+}
+

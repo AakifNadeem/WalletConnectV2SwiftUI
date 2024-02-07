@@ -15,8 +15,9 @@ final class SignCoordinator {
             name: "Navigate App",
             description: "WalletConnect to Navigate App",
             url: "https://nvg8.io",
-            icons: ["https://nvg8.io/assets/Nvg8-Logo.svg"]
-            )
+            icons: ["https://nvg8.io/assets/Nvg8-Logo.svg"], 
+            redirect:  AppMetadata.Redirect(native: "navigateExplore://", universal: nil)
+        )
 
         Pair.configure(metadata: metadata)
 #if DEBUG
