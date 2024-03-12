@@ -17,10 +17,10 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/WalletConnect/Web3.swift", exact: "1.0.2"),
         .package(url: "https://github.com/daltoniam/Starscream", exact: "3.1.2"),
-        .package(url: "https://github.com/WalletConnect/WalletConnectSwiftV2.git", exact: "1.12.0"),
+        .package(url: "https://github.com/WalletConnect/WalletConnectSwiftV2.git", exact: "1.13.0"),
         .package(url: "https://github.com/flypaper0/solana-swift", branch: "feature/available-13"),
         .package(url: "https://github.com/WalletConnect/HDWallet", branch: "develop"),
-        .package(url: "https://github.com/WalletConnect/web3modal-swift", exact: "1.1.0"),
+        .package(url: "https://github.com/WalletConnect/web3modal-swift", exact: "1.3.0"),
     ],
     targets: [
         .target(
